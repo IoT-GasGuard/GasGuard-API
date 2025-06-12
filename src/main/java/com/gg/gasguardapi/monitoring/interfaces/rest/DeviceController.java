@@ -1,13 +1,16 @@
 package com.gg.gasguardapi.monitoring.interfaces.rest;
 
-import com.gg.gasguardapi.monitoring.domain.model.commands.CreateDeviceCommand;
+import com.gg.gasguardapi.monitoring.domain.model.commands.DeleteDeviceCommand;
 import com.gg.gasguardapi.monitoring.domain.model.queries.GetAllDevicesByProfileId;
 import com.gg.gasguardapi.monitoring.domain.services.DeviceCommandService;
 import com.gg.gasguardapi.monitoring.domain.services.DeviceQueryService;
 import com.gg.gasguardapi.monitoring.interfaces.rest.resources.CreateDeviceResource;
+import com.gg.gasguardapi.monitoring.interfaces.rest.resources.DeletedDevice;
 import com.gg.gasguardapi.monitoring.interfaces.rest.resources.DeviceResource;
+import com.gg.gasguardapi.monitoring.interfaces.rest.resources.UpdateDeviceResource;
 import com.gg.gasguardapi.monitoring.interfaces.rest.transform.CreateDeviceCommandFromResourceAssembler;
 import com.gg.gasguardapi.monitoring.interfaces.rest.transform.DeviceResourceFromEntityAssembler;
+import com.gg.gasguardapi.monitoring.interfaces.rest.transform.UpdateDeviceCommandFromResourceAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +49,24 @@ public class DeviceController {
                 .map(DeviceResourceFromEntityAssembler::toResourceFromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(resources);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<DeviceResource> updateDevice(
+            @PathVariable Long id,
+            @RequestBody UpdateDeviceResource updateDeviceResource){
+        var command = UpdateDeviceCommandFromResourceAssembler.toCommandFromResource(id, updateDeviceResource);
+        var device = deviceCommandService.handle(command);
+        if(device.isEmpty())return ResponseEntity.badRequest().build();
+        var resource = DeviceResourceFromEntityAssembler.toResourceFromEntity(device.get());
+        return ResponseEntity.ok(resource);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DeletedDevice> deleteDevice(@PathVariable Long id) {
+        var deviceId = deviceCommandService.handle(new DeleteDeviceCommand(id));
+        if (deviceId.isEmpty())return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(new DeletedDevice(deviceId.get()));
     }
 
 }
