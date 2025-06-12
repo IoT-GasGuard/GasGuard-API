@@ -4,13 +4,14 @@ import com.gg.gasguardapi.monitoring.infrastructure.websocket.controller.message
 import com.gg.gasguardapi.monitoring.infrastructure.websocket.controller.messages.GasUpdateMessage;
 
 public class GasUpdateMessageFromReadingAssembler {
-    public static GasUpdateMessage handle(GasReadingMessage gasReading, String message){
+    public static GasUpdateMessage handle(GasReadingMessage gasReading, String message, Double value){
         return new GasUpdateMessage(
                 gasReading.deviceId(),
                 gasReading.ppm(),
                 gasReading.timestamp(),
                 gasReading.status(),
-                message
+                message,
+                value
         );
     }
 }

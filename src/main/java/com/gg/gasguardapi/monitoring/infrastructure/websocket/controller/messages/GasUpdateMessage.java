@@ -7,6 +7,7 @@ public record GasUpdateMessage (
         Double ppm,
         Date timestamp,
         String status,
-        String message
+        String message,
+        Double value // porcentaje exacto
 ) {
 }

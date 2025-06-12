@@ -5,6 +5,7 @@ import java.util.Date;
 public record GasReadingMessage(
         String deviceId,
         Double ppm,
+        Double threshold,
         Date timestamp,
         String status
 ) {
