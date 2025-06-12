@@ -1,6 +1,6 @@
 package com.gg.gasguardapi.iam.application.internal.commandServices;
 
-import com.gg.gasguardapi.iam.application.internal.outboundservices.acl.ExternalProfileService;
+import com.gg.gasguardapi.iam.application.internal.outboundservices.acl.ExternalProfileIamService;
 import com.gg.gasguardapi.iam.application.internal.outboundservices.hashing.HashingService;
 import com.gg.gasguardapi.iam.application.internal.outboundservices.tokens.TokenService;
 import com.gg.gasguardapi.iam.domain.model.aggregates.User;
@@ -19,24 +19,24 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final TokenService tokenService;
     private final HashingService hashingService;
 
-    private final ExternalProfileService externalProfileService;
+    private final ExternalProfileIamService externalProfileIamService;
 
     public UserCommandServiceImpl(
             UserRepository userRepository,
             TokenService tokenService,
             HashingService hashingService,
-            ExternalProfileService externalProfileService) {
+            ExternalProfileIamService externalProfileIamService) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.hashingService = hashingService;
-        this.externalProfileService = externalProfileService;
+        this.externalProfileIamService = externalProfileIamService;
     }
 
     private Optional<User> createUser(String email, String password) {
         if(userRepository.findByEmail(email).isPresent()){
             return Optional.empty();
         }
-        var profile = externalProfileService.createProfile(email);
+        var profile = externalProfileIamService.createProfile(email);
         if (profile.isEmpty())return Optional.empty();
         return Optional.of(new User(email,hashingService.encode(password),profile.get()));
     }
