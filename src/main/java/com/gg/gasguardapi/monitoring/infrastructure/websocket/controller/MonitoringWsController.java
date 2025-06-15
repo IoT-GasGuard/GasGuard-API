@@ -38,8 +38,6 @@ public class MonitoringWsController {
         Double value = gasReadingMessage.ppm()*71.0;
         String message = "";
         if (gasReadingMessage.ppm()>gasReadingMessage.threshold()){
-            // emitir evento para reportes bounded context
-
             message="ALERTA Nivel De Gas Peligroso: "+ gasReadingMessage.ppm()+" ppm";
         }else {
             message = "Lectura de gas: " + gasReadingMessage.ppm()+" ppm";
