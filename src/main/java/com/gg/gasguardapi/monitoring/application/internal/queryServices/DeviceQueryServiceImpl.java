@@ -3,12 +3,14 @@ package com.gg.gasguardapi.monitoring.application.internal.queryServices;
 import com.gg.gasguardapi.monitoring.application.internal.outboundservices.acl.ExternalProfileDeviceService;
 import com.gg.gasguardapi.monitoring.domain.model.aggregates.Device;
 import com.gg.gasguardapi.monitoring.domain.model.queries.GetAllDevicesByProfileId;
+import com.gg.gasguardapi.monitoring.domain.model.queries.GetByDeviceIdQuery;
 import com.gg.gasguardapi.monitoring.domain.services.DeviceQueryService;
 import com.gg.gasguardapi.monitoring.infrastructure.persistence.jpa.repositories.DeviceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DeviceQueryServiceImpl implements DeviceQueryService {
@@ -27,5 +29,10 @@ public class DeviceQueryServiceImpl implements DeviceQueryService {
         var profile = externalProfileDeviceService.getProfileById(query.profileId());
         if (profile.isEmpty())return Collections.emptyList();
         return deviceRepository.findAllByProfilesId(profile.get().getId());
+    }
+
+    @Override
+    public Optional<Device> handle(GetByDeviceIdQuery query) {
+        return deviceRepository.findByDeviceId(query.deviceId());
     }
 }
