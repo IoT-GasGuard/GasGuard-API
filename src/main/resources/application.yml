@@ -24,6 +24,8 @@ spring:
 mqttClient:
   brokerUrl: ${MQTT_BROKER_URL}
   clientId: ${MQTT_CLIENT_ID}
+  username: ${MQTT_CLIENT_USERNAME}
+  password: ${MQTT_CLIENT_PASSWORD}
 
 authorization:
   jwt:
