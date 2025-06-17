@@ -1,3 +1,34 @@
+server:
+  port: ${PORT:8080}
+
 spring:
   application:
     name: GasGuardAPI
+  config:
+    import:
+      - env.properties
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+mqttClient:
+  brokerUrl: ${MQTT_BROKER_URL}
+  clientId: ${MQTT_CLIENT_ID}
+  username: ${MQTT_CLIENT_USERNAME}
+  password: ${MQTT_CLIENT_PASSWORD}
+
+authorization:
+  jwt:
+    secret: ${GG_SECRET}
+    expiration:
+      days: ${GG_TOKEN_EXP}
