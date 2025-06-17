@@ -8,6 +8,7 @@ import com.gg.gasguardapi.reports.interfaces.rest.transform.CreateReportCommandF
 import com.gg.gasguardapi.reports.interfaces.rest.transform.ReportResourceFromEntityAssembler;
 import jakarta.annotation.PostConstruct;
 import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,12 @@ public class MqttReportSubscriber implements MqttCallback {
 
     @Value(value = "${mqttClient.clientId}")
     private String clientId;
+
+    @Value(value = "${mqttClient.username}")
+    private String username;
+
+    @Value(value = "${mqttClient.password}")
+    private String password;
 
     private String topic = "gg/reports";
 
@@ -37,9 +44,13 @@ public class MqttReportSubscriber implements MqttCallback {
     @PostConstruct
     public void init(){
         try{
-            client = new MqttClient(brokerUrl, clientId);
+            client = new MqttClient(brokerUrl, clientId,new MemoryPersistence());
             MqttConnectOptions options = new MqttConnectOptions();
             options.setCleanSession(true);
+
+            options.setUserName(username);
+            options.setPassword(password.toCharArray());
+
             client.setCallback(this);
             client.connect(options);
             client.subscribe(topic, 1);
