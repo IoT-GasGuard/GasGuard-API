@@ -15,24 +15,6 @@ public class MonitoringWsController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    /*
-    @MessageMapping("/gas")
-    @SendTo("/topic/gas")
-    public GasUpdateMessage handleGasReading(GasReadingMessage gasReadingMessage) {
-        Double value = gasReadingMessage.ppm()*71.0;
-        if (gasReadingMessage.ppm()>gasReadingMessage.threshold()){
-            // emitir evento para reportes bounded context
-        }
-
-        String message = gasReadingMessage.ppm() > 0.683761 ?
-                "ALERTA Nivel De Gas Peligroso: "+ gasReadingMessage.ppm()+" ppm"
-                : "Lectura de gas: " + gasReadingMessage.ppm()+" ppm";
-
-        var resource = GasUpdateMessageFromReadingAssembler.handle(gasReadingMessage,message,value);
-        return resource;
-    }
-    */
-
     @MessageMapping("/gas")
     public void handleGasReading(GasReadingMessage gasReadingMessage) {
         Double value = gasReadingMessage.ppm()*71.0;
