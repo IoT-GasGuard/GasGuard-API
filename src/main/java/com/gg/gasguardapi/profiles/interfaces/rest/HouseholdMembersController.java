@@ -7,6 +7,8 @@ import com.gg.gasguardapi.profiles.interfaces.rest.resources.CreateHouseholdMemb
 import com.gg.gasguardapi.profiles.interfaces.rest.resources.HouseholdMemberResource;
 import com.gg.gasguardapi.profiles.interfaces.rest.transform.CreateHouseholdMemberCommandFromResourceAssembler;
 import com.gg.gasguardapi.profiles.interfaces.rest.transform.HouseholdMemberResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/contacts", produces = MediaType.APPLICATION_JSON_VALUE)
+@Tag(name = "Household Members", description = "Operations related to household members")
 public class HouseholdMembersController {
     private final HouseholdMemberCommandService householdMemberCommandService;
     private final HouseholdMemberQueryService householdMemberQueryService;
@@ -29,6 +32,7 @@ public class HouseholdMembersController {
         this.householdMemberQueryService = householdMemberQueryService;
     }
 
+    @Operation(summary = "Add household member")
     @PostMapping
     public ResponseEntity<HouseholdMemberResource> createHouseholdMember(
             @RequestBody CreateHouseholdMemberResource householdMemberResource) {
@@ -39,6 +43,7 @@ public class HouseholdMembersController {
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get Household Member By Profile Id")
     @GetMapping("/profile/{id}")
     public ResponseEntity<List<HouseholdMemberResource>> getHouseholdMembers(@PathVariable Long id){
         var contacts = householdMemberQueryService.handle(new GetAllHouseholdMemberByProfileId(id));
