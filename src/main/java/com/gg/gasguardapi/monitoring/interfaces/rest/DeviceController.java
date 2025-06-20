@@ -11,6 +11,8 @@ import com.gg.gasguardapi.monitoring.interfaces.rest.resources.UpdateDeviceResou
 import com.gg.gasguardapi.monitoring.interfaces.rest.transform.CreateDeviceCommandFromResourceAssembler;
 import com.gg.gasguardapi.monitoring.interfaces.rest.transform.DeviceResourceFromEntityAssembler;
 import com.gg.gasguardapi.monitoring.interfaces.rest.transform.UpdateDeviceCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/devices",produces = MediaType.APPLICATION_JSON_VALUE)
+@Tag(name = "Devices", description = "Operations related to devices")
 public class DeviceController {
     private final DeviceCommandService deviceCommandService;
     private final DeviceQueryService deviceQueryService;
@@ -33,6 +36,7 @@ public class DeviceController {
         this.deviceQueryService = deviceQueryService;
     }
 
+    @Operation(summary = "Create Device")
     @PostMapping
     public ResponseEntity<DeviceResource> addDevice(@RequestBody CreateDeviceResource createDeviceResource) {
         var command = CreateDeviceCommandFromResourceAssembler.toCommandFromResource(createDeviceResource);
@@ -42,6 +46,7 @@ public class DeviceController {
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get All Devices By Profile Id")
     @GetMapping("/profile/{id}")
     public ResponseEntity<List<DeviceResource>> getAllDevicesByProfileId(@PathVariable Long id) {
         var devices = deviceQueryService.handle(new GetAllDevicesByProfileId(id));
@@ -51,6 +56,7 @@ public class DeviceController {
         return ResponseEntity.ok(resources);
     }
 
+    @Operation(summary = "Update Device")
     @PatchMapping("/{id}")
     public ResponseEntity<DeviceResource> updateDevice(
             @PathVariable Long id,
@@ -62,6 +68,7 @@ public class DeviceController {
         return ResponseEntity.ok(resource);
     }
 
+    @Operation(summary = "Delete Device")
     @DeleteMapping("/{id}")
     public ResponseEntity<DeletedDevice> deleteDevice(@PathVariable Long id) {
         var deviceId = deviceCommandService.handle(new DeleteDeviceCommand(id));

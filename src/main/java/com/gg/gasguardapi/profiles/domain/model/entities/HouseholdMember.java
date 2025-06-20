@@ -31,8 +31,6 @@ public class HouseholdMember extends AuditableModel {
         this.profile=profile;
     }
 
-
-
     public Long getId() {
         return id;
     }
@@ -59,5 +57,25 @@ public class HouseholdMember extends AuditableModel {
 
     public Profiles getProfile() {
         return profile;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setEmergencyContact(boolean emergencyContact) {
+        this.emergencyContact = emergencyContact;
+    }
+
+    public void setGasAlerts(boolean gasAlerts) {
+        this.gasAlerts = gasAlerts;
     }
 }

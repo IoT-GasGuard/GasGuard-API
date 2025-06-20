@@ -10,13 +10,13 @@ public class ReportResourceFromEntityAssembler {
                 entity.getId(),
                 entity.getDate(),
                 entity.getTime(),
-                entity.getDevice().getName(),
+                entity.getDeviceId(),
                 entity.getLocation(),
                 entity.getGasLevel(),
                 entity.getDuration(),
                 entity.getActionsTaken(),
-                entity.isResolved()
-
+                entity.isResolved(),
+                entity.getProfiles().getId()
         );
     }
 }

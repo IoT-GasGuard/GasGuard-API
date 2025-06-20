@@ -9,6 +9,8 @@ import com.gg.gasguardapi.iam.interfaces.rest.resources.SignUpResource;
 import com.gg.gasguardapi.iam.interfaces.rest.resources.UserResource;
 import com.gg.gasguardapi.iam.interfaces.rest.transform.AuthenticatedUserResourceFromEntityAssembler;
 import com.gg.gasguardapi.iam.interfaces.rest.transform.UserResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +21,7 @@ import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping(value = "/api/v1/auth",produces = MediaType.APPLICATION_JSON_VALUE)
+@Tag(name = "Authentication", description = "Operations related to users authentication")
 public class AuthController {
     private final UserCommandService userCommandService;
 
@@ -26,6 +29,7 @@ public class AuthController {
         this.userCommandService = userCommandService;
     }
 
+    @Operation(summary = "Create User")
     @PostMapping(value = "/sign-up")
     public ResponseEntity<UserResource> signUp(@RequestBody SignUpResource resource){
         var user = userCommandService.handle(new SignUpUserCommand(resource.email(), resource.password()));
@@ -34,6 +38,7 @@ public class AuthController {
         return new ResponseEntity<>(userResource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Sign In")
     @PostMapping(value = "/sign-in")
     public ResponseEntity<AuthenticatedUserResource> signIn(@RequestBody SignInResource resource){
         var user = userCommandService.handle(new SignInUserCommand(resource.email(), resource.password()));
