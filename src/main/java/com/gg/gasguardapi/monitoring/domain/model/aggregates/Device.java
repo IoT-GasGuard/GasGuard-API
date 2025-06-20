@@ -36,6 +36,10 @@ public class Device {
         this.profiles=profile;
     }
 
+    public Profiles getProfiles() {
+        return profiles;
+    }
+
     public Long getId() {
         return id;
     }

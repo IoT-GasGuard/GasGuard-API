@@ -47,7 +47,7 @@ public class ReportsCommandServiceImpl implements ReportsCommandService {
         var device = externalDeviceReportService.getDevice(command.deviceId());
         if (device.isEmpty())return Optional.empty();
 
-        var report = new Report(command,device.get(),protocols);
+        var report = new Report(command,device.get(),device.get().getProfiles(),protocols);
 
         reportsRepository.save(report);
 

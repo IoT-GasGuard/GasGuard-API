@@ -1,5 +1,6 @@
 package com.gg.gasguardapi.reports.interfaces.rest;
 
+import com.gg.gasguardapi.reports.domain.model.queries.GetAllReportsByProfileId;
 import com.gg.gasguardapi.reports.domain.model.queries.GetReportsByDeviceId;
 import com.gg.gasguardapi.reports.domain.services.ReportsQueryService;
 import com.gg.gasguardapi.reports.interfaces.rest.resources.ReportResource;
@@ -24,13 +25,22 @@ public class ReportsController {
         this.reportsQueryService = reportsQueryService;
     }
 
-    @Operation(summary = "Get Gas Leaks Reports By Device Id")
-    @GetMapping("/device/{deviceId}")
+    @Operation(summary = "Get Gas Leaks Reports By Profile Id")
+    @GetMapping("/profile/{profileId}")
+    public ResponseEntity<List<ReportResource>> getReportsByDeviceId(@PathVariable Long profileId) {
+        var reports = reportsQueryService.handle(new GetAllReportsByProfileId(profileId));
+        var resources= reports.stream()
+                .map(ReportResourceFromEntityAssembler::toResourceFromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(resources);
+    }
+
+    /*@GetMapping("/device/{deviceId}")
     public ResponseEntity<List<ReportResource>> getReportsByDeviceId(@PathVariable String deviceId) {
         var reports = reportsQueryService.handle(new GetReportsByDeviceId(deviceId));
         var resources= reports.stream()
                 .map(ReportResourceFromEntityAssembler::toResourceFromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(resources);
-    }
+    }*/
 }
