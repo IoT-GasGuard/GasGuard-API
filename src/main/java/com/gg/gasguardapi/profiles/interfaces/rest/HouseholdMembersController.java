@@ -1,12 +1,16 @@
 package com.gg.gasguardapi.profiles.interfaces.rest;
 
+import com.gg.gasguardapi.profiles.domain.model.commands.DeleteHouseholdMemberCommand;
 import com.gg.gasguardapi.profiles.domain.model.queries.GetAllHouseholdMemberByProfileId;
 import com.gg.gasguardapi.profiles.domain.services.HouseholdMemberCommandService;
 import com.gg.gasguardapi.profiles.domain.services.HouseholdMemberQueryService;
 import com.gg.gasguardapi.profiles.interfaces.rest.resources.CreateHouseholdMemberResource;
+import com.gg.gasguardapi.profiles.interfaces.rest.resources.DeletedHouseholdMember;
 import com.gg.gasguardapi.profiles.interfaces.rest.resources.HouseholdMemberResource;
+import com.gg.gasguardapi.profiles.interfaces.rest.resources.UpdateHouseholdMemberResource;
 import com.gg.gasguardapi.profiles.interfaces.rest.transform.CreateHouseholdMemberCommandFromResourceAssembler;
 import com.gg.gasguardapi.profiles.interfaces.rest.transform.HouseholdMemberResourceFromEntityAssembler;
+import com.gg.gasguardapi.profiles.interfaces.rest.transform.UpdateHouseholdMemberCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -51,5 +55,25 @@ public class HouseholdMembersController {
                 .map(HouseholdMemberResourceFromEntityAssembler::toResourceFromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(resources);
+    }
+
+    @Operation(summary = "Update Household Member")
+    @PatchMapping("/{id}")
+    public ResponseEntity<HouseholdMemberResource> updateHouseholdMember(
+            @PathVariable Long id,
+            @RequestBody UpdateHouseholdMemberResource updateHouseholdMemberResource){
+        var command = UpdateHouseholdMemberCommandFromResourceAssembler
+                .toCommandFromResource(updateHouseholdMemberResource,id);
+        var contact = householdMemberCommandService.handle(command);
+        if(contact.isEmpty())return ResponseEntity.badRequest().build();
+        var resource = HouseholdMemberResourceFromEntityAssembler.toResourceFromEntity(contact.get());
+        return ResponseEntity.ok(resource);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DeletedHouseholdMember> deleteHouseholdMember(@PathVariable Long id){
+        var contactId = householdMemberCommandService.handle(new DeleteHouseholdMemberCommand(id));
+        if (contactId.isEmpty())return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(new DeletedHouseholdMember(contactId.get()));
     }
 }
