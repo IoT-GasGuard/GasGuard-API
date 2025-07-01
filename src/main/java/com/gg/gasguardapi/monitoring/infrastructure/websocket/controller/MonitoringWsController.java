@@ -31,6 +31,6 @@ public class MonitoringWsController {
     @MessageMapping("/lighting") // frontend: /app/lighting
     public void handleLightingMessage(LightingMessage lightingMessage){
         // Envia a: /topic/lighting/{deviceId}
-        simpMessagingTemplate.convertAndSend("/topic/lighting/"+lightingMessage.deviceId());
+        simpMessagingTemplate.convertAndSend("/topic/lighting/"+lightingMessage.deviceId(), lightingMessage);
     }
 }
