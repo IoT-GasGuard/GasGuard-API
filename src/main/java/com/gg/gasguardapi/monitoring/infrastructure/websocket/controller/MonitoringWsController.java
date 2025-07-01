@@ -1,6 +1,7 @@
 package com.gg.gasguardapi.monitoring.infrastructure.websocket.controller;
 
 import com.gg.gasguardapi.monitoring.infrastructure.websocket.controller.messages.GasReadingMessage;
+import com.gg.gasguardapi.monitoring.infrastructure.websocket.controller.messages.LightingMessage;
 import com.gg.gasguardapi.monitoring.infrastructure.websocket.controller.transform.GasUpdateMessageFromReadingAssembler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -26,5 +27,10 @@ public class MonitoringWsController {
         }
         var resource = GasUpdateMessageFromReadingAssembler.handle(gasReadingMessage,message,value);
         simpMessagingTemplate.convertAndSend("/topic/gas/"+resource.deviceId(), resource);
+    }
+    @MessageMapping("/lighting") // frontend: /app/lighting
+    public void handleLightingMessage(LightingMessage lightingMessage){
+        // Envia a: /topic/lighting/{deviceId}
+        simpMessagingTemplate.convertAndSend("/topic/lighting/"+lightingMessage.deviceId(), lightingMessage);
     }
 }
