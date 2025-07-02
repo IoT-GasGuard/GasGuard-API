@@ -8,6 +8,7 @@ import com.gg.gasguardapi.monitoring.domain.model.commands.SendAlertToContactsCo
 import com.gg.gasguardapi.monitoring.domain.model.commands.UpdateDeviceCommand;
 import com.gg.gasguardapi.monitoring.domain.services.DeviceCommandService;
 import com.gg.gasguardapi.monitoring.infrastructure.persistence.jpa.repositories.DeviceRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -53,11 +54,16 @@ public class DeviceCommandServiceImpl implements DeviceCommandService {
         return Optional.of(deviceId);
     }
 
+    @Async
     @Override
     public void handle(SendAlertToContactsCommand command) {
         var device = deviceRepository.findByDeviceId(command.deviceId());
         if (device.isEmpty())return;
         var profile = device.get().getProfiles();
-        externalProfileDeviceService.sendAlertToContacts(device.get().getLocation());
+        externalProfileDeviceService.sendAlertToContacts(
+                device.get().getLocation(),
+                profile.getId(),
+                profile.getName(),
+                command.status());
     }
 }

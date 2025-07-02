@@ -34,7 +34,7 @@ public class ProfileContextFacade {
         return profilesQueryService.handle(new GetProfileByIdQuery(id));
     }
 
-    public void sendSmsToEmergencyContacts(String location){
-        householdMemberCommandService.handle(new SendSMSToEmergencyContactCommand(location));
+    public void sendSmsToEmergencyContacts(String location, Long profileId, String name, String status){
+        householdMemberCommandService.handle(new SendSMSToEmergencyContactCommand(location, profileId, name, status));
     }
 }
