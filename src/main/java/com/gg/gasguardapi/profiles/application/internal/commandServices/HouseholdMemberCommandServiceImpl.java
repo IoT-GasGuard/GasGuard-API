@@ -1,7 +1,9 @@
 package com.gg.gasguardapi.profiles.application.internal.commandServices;
 
+import com.gg.gasguardapi.profiles.application.internal.outboundservices.acl.SmsService;
 import com.gg.gasguardapi.profiles.domain.model.commands.CreateHouseholdMemberCommand;
 import com.gg.gasguardapi.profiles.domain.model.commands.DeleteHouseholdMemberCommand;
+import com.gg.gasguardapi.profiles.domain.model.commands.SendSMSToEmergencyContactCommand;
 import com.gg.gasguardapi.profiles.domain.model.commands.UpdateHouseholdMemberCommand;
 import com.gg.gasguardapi.profiles.domain.model.entities.HouseholdMember;
 import com.gg.gasguardapi.profiles.domain.services.HouseholdMemberCommandService;
@@ -16,11 +18,15 @@ public class HouseholdMemberCommandServiceImpl implements HouseholdMemberCommand
     private final HouseholdMemberRepository householdMemberRepository;
     private final ProfilesRepository profilesRepository;
 
+    private final SmsService smsService;
+
     public HouseholdMemberCommandServiceImpl(
             HouseholdMemberRepository householdMemberRepository,
-            ProfilesRepository profilesRepository) {
+            ProfilesRepository profilesRepository,
+            SmsService smsService) {
         this.householdMemberRepository = householdMemberRepository;
         this.profilesRepository = profilesRepository;
+        this.smsService = smsService;
     }
 
     @Override
@@ -52,5 +58,10 @@ public class HouseholdMemberCommandServiceImpl implements HouseholdMemberCommand
         Long id = contact.get().getId();
         householdMemberRepository.delete(contact.get());
         return Optional.of(id);
+    }
+
+    @Override
+    public void handle(SendSMSToEmergencyContactCommand command) {
+
     }
 }
