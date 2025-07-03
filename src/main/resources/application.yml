@@ -29,6 +29,9 @@ twilio:
   token: ${TWILIO_TOKEN}
   phone-number: ${TWILIO_PHONE_NUMBER}
 
+swagger:
+  server-url: ${SWAGGER_SERVER}
+
 authorization:
   jwt:
     secret: ${GG_SECRET}
