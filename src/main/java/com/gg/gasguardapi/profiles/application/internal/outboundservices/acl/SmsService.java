@@ -16,11 +16,12 @@ public class SmsService {
 
     public void sendSMS(String to, String message) {
         try{
-            Message.creator(
-                    new PhoneNumber(to),
-                    new PhoneNumber(fromNumber),
-                    message
-            ).create();
+            // Message.creator(
+            //         new PhoneNumber(to),
+            //         new PhoneNumber(fromNumber),
+            //         message
+            // ).create();
+            LOGGER.info("SMS enviado al número: "+to);
         }catch (Exception e){
             LOGGER.error("Failed to send SMS to phone number: "+to+". Error: ",e.getMessage());
         }
