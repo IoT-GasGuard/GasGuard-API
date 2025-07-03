@@ -4,9 +4,11 @@ import com.gg.gasguardapi.monitoring.application.internal.outboundservices.acl.E
 import com.gg.gasguardapi.monitoring.domain.model.aggregates.Device;
 import com.gg.gasguardapi.monitoring.domain.model.commands.CreateDeviceCommand;
 import com.gg.gasguardapi.monitoring.domain.model.commands.DeleteDeviceCommand;
+import com.gg.gasguardapi.monitoring.domain.model.commands.SendAlertToContactsCommand;
 import com.gg.gasguardapi.monitoring.domain.model.commands.UpdateDeviceCommand;
 import com.gg.gasguardapi.monitoring.domain.services.DeviceCommandService;
 import com.gg.gasguardapi.monitoring.infrastructure.persistence.jpa.repositories.DeviceRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -50,5 +52,18 @@ public class DeviceCommandServiceImpl implements DeviceCommandService {
         String deviceId = device.get().getDeviceId();
         deviceRepository.delete(device.get());
         return Optional.of(deviceId);
+    }
+
+    @Async
+    @Override
+    public void handle(SendAlertToContactsCommand command) {
+        var device = deviceRepository.findByDeviceId(command.deviceId());
+        if (device.isEmpty())return;
+        var profile = device.get().getProfiles();
+        externalProfileDeviceService.sendAlertToContacts(
+                device.get().getLocation(),
+                profile.getId(),
+                profile.getName(),
+                command.status());
     }
 }

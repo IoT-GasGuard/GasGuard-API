@@ -17,4 +17,8 @@ public class ExternalProfileDeviceService {
     public Optional<Profiles> getProfileById(Long id){
         return profileContextFacade.getProfileById(id);
     }
+
+    public void sendAlertToContacts(String location, Long profileId, String name, String status){
+        profileContextFacade.sendSmsToEmergencyContacts(location, profileId, name, status);
+    }
 }
