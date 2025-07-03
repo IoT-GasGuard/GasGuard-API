@@ -9,15 +9,25 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
+import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
 public class OpenApiConfiguration {
+
+    @Value("${swagger.server-url}")
+    private String swaggerServerUrl;
+
     @Bean
-    public OpenAPI fromZeroApiOpenApi() {
+    public OpenAPI ggApiOpenApi() {
 
         // General configuration
         var openApi = new OpenAPI();
-        openApi.info(new Info()
+
+        Server server = new Server();
+        server.setUrl(swaggerServerUrl);
+        openApi.addServersItem(server)
+                .info(new Info()
                         .title("GasGuard API REST")
                         .description("GasGuard API documentation.")
                         .version("v1.0.0")
