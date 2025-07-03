@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface ReportsRepository extends JpaRepository<Report, Long> {
     Boolean existsByReportId(String reportId);
-    List<Report>findAllByDeviceId(Long deviceId);
+    //List<Report>findAllByDeviceId(Long deviceId);
+    List<Report> findAllByProfilesId(Long profileId);
 }

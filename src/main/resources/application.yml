@@ -27,6 +27,11 @@ mqttClient:
   username: ${MQTT_CLIENT_USERNAME}
   password: ${MQTT_CLIENT_PASSWORD}
 
+twilio:
+  sid: ${TWILIO_SID}
+  token: ${TWILIO_TOKEN}
+  phone-number: ${TWILIO_PHONE_NUMBER}
+
 authorization:
   jwt:
     secret: ${GG_SECRET}

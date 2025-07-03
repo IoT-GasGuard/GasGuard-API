@@ -13,6 +13,7 @@ public record ReportResource(
         Double gasLevel,
         String duration,
         Set<Protocols> actionsTaken,
-        boolean resolved
+        boolean resolved,
+        Long profileId
 ) {
 }
